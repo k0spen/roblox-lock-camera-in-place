@@ -1,0 +1,27 @@
+local camera = game.Workspace.CurrentCamera
+local player = game.Players.LocalPlayer
+
+camera.CameraType = Enum.CameraType.Scriptable
+
+local targetDistance = 30
+local cameraDistance = -55
+local cameraDirection = Vector3.new(0,1,0)
+
+local currentTarget = cameraDirection*targetDistance
+local currentPosition = cameraDirection*cameraDistance
+
+game:GetService("RunService").RenderStepped:connect(function()
+	local character = player.Character
+	if character and character:FindFirstChild("Humanoid") and character:FindFirstChild("HumanoidRootPart") then
+		local torso = character.HumanoidRootPart
+		camera.Focus = torso.CFrame
+		if torso:FindFirstChild("FastStart") == nil then
+			-- Set the camera CoordinateFrame to look from the top
+			camera.CoordinateFrame = 	CFrame.new(Vector3.new(torso.Position.X, 100, torso.Position.Z) + currentPosition, 
+				Vector3.new(torso.Position.X,  0, torso.Position.Z) + currentTarget)
+		else
+			camera.CoordinateFrame = CFrame.new(Vector3.new(torso.Position.X, torso.Position.Y - -20, torso.Position.Z - 20) + currentPosition, 
+				Vector3.new(torso.Position.X,  torso.Position.Y - -20, torso.Position.Z - 20) + currentTarget)
+		end
+	end
+end)
